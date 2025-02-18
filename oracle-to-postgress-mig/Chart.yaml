@@ -1,0 +1,5 @@
+apiVersion: v2
+name: postgres-db
+description: A Helm chart for deploying PostgreSQL with PersistentVolume and PersistentVolumeClaim
+version: 0.1.0
+appVersion: "15"

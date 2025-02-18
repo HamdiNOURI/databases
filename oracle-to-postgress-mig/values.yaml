@@ -1,0 +1,38 @@
+namespace: db-migrate
+
+config:
+  POSTGRES_USER: "admin"
+  POSTGRES_DB: "migratedb"
+
+secret:
+  POSTGRES_PASSWORD: "admin" # Replace with a secure password in production
+
+pvc:
+  name: claim-pv-postgres-db
+  accessModes:
+    - ReadWriteOnce
+  storage: 20Gi
+
+pv:
+  name: pv-postgres-db
+  capacity: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath: /u01/db-migrate
+
+deployment:
+  name: postgres-db
+  replicas: 1
+  image:
+    repository: postgres
+    tag: "15"
+  containerPort: 5432
+  volumeMounts:
+    mountPath: /var/lib/postgresql/data
+    name: postgres-storage
+
+service:
+  name: postgres-service
+  port: 5432
+  targetPort: 5432
+  type: LoadBalancer
