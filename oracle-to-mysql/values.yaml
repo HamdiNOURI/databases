@@ -1,0 +1,41 @@
+namespace: db-migrate
+
+# Non-sensitive configuration
+config:
+  MYSQL_DATABASE: "migratedb"
+  MYSQL_USER: "admin"
+
+# Sensitive configuration (passwords)
+secret:
+  MYSQL_ROOT_PASSWORD: "" # Leave empty or use a placeholder
+  MYSQL_PASSWORD: ""      # Leave empty or use a placeholder
+
+pvc:
+  name: claim-pv-mysql-db
+  accessModes:
+    - ReadWriteOnce
+  storage: 20Gi
+
+pv:
+  name: pv-mysql-db
+  capacity: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath: /u01/db-migrate
+
+deployment:
+  name: mysql-db
+  replicas: 1
+  image:
+    repository: mysql
+    tag: "8.0"
+  containerPort: 3306
+  volumeMounts:
+    mountPath: /var/lib/mysql
+    name: mysql-storage
+
+service:
+  name: mysql-service
+  port: 3306
+  targetPort: 3306
+  type: LoadBalancer
